@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jomason <jomason@student.42.fr>            +#+  +:+       +#+        */
+/*   By: jomason <jomason@student.42.de>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/03 19:09:09 by jomason           #+#    #+#             */
-/*   Updated: 2026/01/14 13:47:00 by jomason          ###   ########.fr       */
+/*   Updated: 2026/01/25 12:20:54 by jomason          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,12 @@ char	*get_next_line(int fd)
 	char		*line;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
+	{
+		if (stash)
+			free(stash);
+		stash = NULL;
 		return (NULL);
+	}
 	stash = read_to_store(fd, stash);
 	if (!stash)
 		return (NULL);
@@ -111,3 +116,25 @@ char	*clean_stash(char *stash)
 	free(stash);
 	return (remainder);
 }
+
+// #include <fcntl.h>
+// #include <stdio.h>
+
+// int	main()
+// {
+// 	int	fd;
+// 	char *line;
+
+// 	fd = open("test.txt", O_RDONLY);
+// 	if (fd < 0)
+// 		return (printf("I can't read o.o\n"), (fd < 0));
+// 	line = get_next_line(fd);
+// 	while (line != NULL)
+// 	{
+// 		printf("%s", line);
+// 		free(line);
+// 		line = get_next_line(fd);
+// 	}
+// 	close(fd);
+// 	return (0);
+// }
