@@ -49,7 +49,7 @@ static int	process_format(const char *format, va_list *args)
 {
 	int		i;
 	int		counter;
-	int		error;
+	int		ret;
 
 	i = -1;
 	counter = 0;
@@ -57,16 +57,16 @@ static int	process_format(const char *format, va_list *args)
 	{
 		if (format[i] == '%')
 		{
-			error = handle_spec(format, &i, args);
-			if (error == -2 || error == -1)
+			ret = handle_spec(format, &i, args);
+			if (ret == -2 || ret == -1)
 				return (-1);
-			counter += error;
+			counter += ret;
 			continue ;
 		}
-		error = write(1, &format[i], 1);
-		if (error == -1)
+		ret = write(1, &format[i], 1);
+		if (ret == -1)
 			return (-1);
-		counter += error;
+		counter += ret;
 	}
 	return (counter);
 }
