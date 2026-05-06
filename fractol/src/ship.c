@@ -6,21 +6,11 @@
 /*   By: jomason <jomason@student.42.de>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/14 11:11:57 by jomason           #+#    #+#             */
-/*   Updated: 2026/04/25 10:20:23 by jomason          ###   ########.fr       */
+/*   Updated: 2026/05/06 16:21:40 by jomason          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fractol.h"
-
-static void	init_ship_coords(t_fractol *f, int x, int y)
-{
-	f->coords.c_real = f->view.min_real + (double)x * (f->view.max_real
-			- f->view.min_real) / WIDTH;
-	f->coords.c_imag = f->view.max_imag - (double)y * (f->view.max_imag
-			- f->view.min_imag) / HEIGHT;
-	f->coords.zr = 0.0;
-	f->coords.zi = 0.0;
-}
 
 static int	iterate_ship(t_fractol *f)
 {
@@ -39,6 +29,16 @@ static int	iterate_ship(t_fractol *f)
 		iter++;
 	}
 	return (iter);
+}
+
+static void	init_ship_coords(t_fractol *f, int x, int y)
+{
+	f->coords.c_real = f->view.min_real + (double)x * (f->view.max_real
+			- f->view.min_real) / WIDTH;
+	f->coords.c_imag = f->view.max_imag - (double)y * (f->view.max_imag
+			- f->view.min_imag) / HEIGHT;
+	f->coords.zr = 0.0;
+	f->coords.zi = 0.0;
 }
 
 void	draw_ship(t_fractol *f)

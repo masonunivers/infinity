@@ -6,7 +6,7 @@
 /*   By: jomason <jomason@student.42.de>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/14 11:11:50 by jomason           #+#    #+#             */
-/*   Updated: 2026/05/06 10:09:29 by jomason          ###   ########.fr       */
+/*   Updated: 2026/05/06 16:08:34 by jomason          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,10 @@ int	on_key_pass(int keycode, void *param)
 
 	f = (t_fractol *)param;
 	if (keycode == 65307)
+	{
 		cleanup_fractol(f);
+		exit(EXIT_SUCCESS);
+	}
 	else if (keycode == 65362 || keycode == 65364 || keycode == 65361
 		|| keycode == 65363)
 	{

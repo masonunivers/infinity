@@ -6,7 +6,7 @@
 /*   By: jomason <jomason@student.42.de>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/14 11:12:01 by jomason           #+#    #+#             */
-/*   Updated: 2026/04/25 12:25:17 by jomason          ###   ########.fr       */
+/*   Updated: 2026/05/06 16:36:10 by jomason          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,8 @@ static void	set_real_bounds(t_fractol *f)
 		f->view.max_real = 2.0;
 	}
 }
+// sets bounds where the fractal actually lives
+// more than 2, renders extra emptiness
 
 void	reset_view(t_fractol *f)
 {

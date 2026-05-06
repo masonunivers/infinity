@@ -6,7 +6,7 @@
 /*   By: jomason <jomason@student.42.de>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/14 11:11:44 by jomason           #+#    #+#             */
-/*   Updated: 2026/05/06 10:04:16 by jomason          ###   ########.fr       */
+/*   Updated: 2026/05/06 22:42:31 by jomason          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,21 @@ void	cleanup_fractol(t_fractol *f)
 	if (!f)
 		return ;
 	if (f->img.img_ptr)
+	{
 		mlx_destroy_image(f->mlx_ptr, f->img.img_ptr);
+		f->img.img_ptr = NULL;
+	}
 	if (f->win_ptr)
+	{
 		mlx_destroy_window(f->mlx_ptr, f->win_ptr);
+		f->win_ptr = NULL;
+	}
+	if (f->mlx_ptr)
+	{
+		mlx_destroy_display(f->mlx_ptr);
+		free(f->mlx_ptr);
+		f->mlx_ptr = NULL;
+	}
 	free(f);
 }
 
@@ -68,9 +80,12 @@ int	main(int argc, char **argv)
 
 	if (argc < 2)
 	{
-		ft_putendl_fd("Use: ./fractol <fractol_type>",
-			2);
+		ft_putendl_fd("\n//ERROR MESSAGE // WRONG INPUT//\n", 2);
+		ft_putendl_fd("Use: ./fractol <fractol_type>", 2);
 		ft_putendl_fd("Available: Julia [Dec] [Dec], Mandel, Ship", 2);
+		ft_putendl_fd("For example: ./fractol Julia 0.4 -0.3\n", 2);
+		ft_putendl_fd("(Hint: Magic happens below 1.0 or above -1.0)", 2);
+		ft_putendl_fd("\n//DON'T GIVE UP // TRY AGAIN//\n", 2);
 		return (EXIT_FAILURE);
 	}
 	f = parse_args(argc, argv);
@@ -79,6 +94,11 @@ int	main(int argc, char **argv)
 	run_fractol(f);
 	return (EXIT_SUCCESS);
 }
-// Julia -0.7 0.27015
-// Julia -1 0.3
-// Julia -0.8 0.3
+// simple: (enter together)
+// ./fractol Julia -0.7 0.27
+// ./fractol Julia -0.8 0.156
+// ./fractol Julia 0.285 0.01
+// complex:
+// ./fractol Julia -0.4 0.6
+// ./fractol Julia 0.285 0.0
+// ./fractol Julia -0.835 -0.2321

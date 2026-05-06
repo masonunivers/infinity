@@ -32,6 +32,7 @@ Launch the program by feeding it the name of the mathematical universe you wish 
 ./fractol Julia   # Explore the hypnotic Julia Set
 ./fractol Ship    # Navigate the fiery Burning Ship
 ```
+For the Julia set, you can enter parameter values of 2 to -2 for both x- and y-axis. For example: ``` ./fractol Julia 0.4 -0.3 ```
 
 *For the memory-conscious engineer, you can verify the hull's integrity by running the program through Valgrind:*
 ```shell
@@ -44,7 +45,7 @@ valgrind --leak-check=full --show-leak-kinds=all ./fractol
 
 * **Mouse Wheel:** Zoom deep into the abyss (smartly anchored to your cursor's current position).
 * **Arrow Keys:** Pan across the infinite fractal landscapes.
-* **Space / Number Keys:** Shift the color palette and completely alter the visual atmosphere.
+* **Space:** Shift the color palette and completely alter the visual atmosphere.
 * **ESC / Close Window:** Safely terminate the session, gracefully freeing all allocated resources and memory.
 
 ---
@@ -73,4 +74,9 @@ In the spirit of modern development, Artificial Intelligence was leveraged as a 
 
 * **Demystifying the Arcane:** AI assisted in breaking down foundational knowledge, providing intuitive metaphors for low-level concepts like `t_img` memory layouts, Endianness, and computer graphics theory.
 * **Algorithmic Whispers:** AI served as a sounding board for logic structure, clarifying the mathematical theory behind coordinate mapping, the Escape Time Algorithm, and the elegant implementation of function pointers within C structs.
+
+---
+
+#### For more inspo check out https://mintlify.wiki/ibon-ira/Fractol-42
+
 ***
