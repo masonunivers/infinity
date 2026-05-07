@@ -3,40 +3,81 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jomason <jomason@student.42.fr>            +#+  +:+       +#+        */
+/*   By: jomason <jomason@student.42.de>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/07 10:23:54 by jomason           #+#    #+#             */
-/*   Updated: 2026/05/07 20:37:00 by jomason          ###   ########.fr       */
+/*   Created: 2026/04/14 11:12:01 by jomason           #+#    #+#             */
+/*   Updated: 2026/05/06 16:36:10 by jomason          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "fdf.h"
+#include "fractol.h"
 
-bool	is_trivially_rejected(t_point_render start, t_point_render end)
+void	my_pixel_put(t_img *img, int x, int y, int color)
 {
-	return ((start.x < 0 && end.x < 0) || (start.x >= 1000 && end.x >= 1000)
-		|| (start.y < 0 && end.y < 0) || (start.y >= 1000 && end.y >= 1000));
-}
-//if entire segment out of bounds, skip drawing it
+	char	*dst;
 
-int	ft_abs(int value)
-{
-	if (value < 0)
-		return (-value);
-	return (value);
+	if (x < 0 || x >= WIDTH || y < 0 || y >= HEIGHT)
+		return ;
+	dst = img->pixels_ptr + (y * img->line_len + x * (img->bpp / 8));
+	*(unsigned int *)dst = color;
 }
 
-void	put_pixel_if_inside(mlx_image_t *img, int x, int y)
+int	redraw(t_fractol *f)
 {
-	if (x >= 0 && x < 1000 && y >= 0 && y < 1000)
-		mlx_put_pixel(img, x, y, 0xFFFFFFFF);
+	if (f->dirty)
+	{
+		f->draw_fractal(f);
+		mlx_put_image_to_window(f->mlx_ptr, f->win_ptr, f->img.img_ptr, 0, 0);
+		f->dirty = 0;
+	}
+	return (0);
 }
 
-void	on_close(void *param)
+static void	calculate_imag_bounds(t_fractol *f)
 {
-	t_data	*data;
+	double	real_range;
+	double	image_range;
+	double	aspect_ratio;
 
-	data = (t_data *)param;
-	cleanup_fdf(data);
-	exit(0);
+	aspect_ratio = (double)WIDTH / (double)HEIGHT;
+	real_range = f->view.max_real - f->view.min_real;
+	image_range = real_range / aspect_ratio;
+	if (f->type_id == FRACTOL_C)
+	{
+		f->view.max_imag = 0.0;
+		f->view.min_imag = -image_range;
+	}
+	else
+	{
+		f->view.max_imag = image_range / 2.0;
+		f->view.min_imag = -image_range / 2.0;
+	}
+}
+
+static void	set_real_bounds(t_fractol *f)
+{
+	if (f->type_id == FRACTOL_B)
+	{
+		f->view.min_real = -2.0;
+		f->view.max_real = 1.0;
+	}
+	else if (f->type_id == FRACTOL_A)
+	{
+		f->view.min_real = -2.0;
+		f->view.max_real = 2.0;
+	}
+	else if (f->type_id == FRACTOL_C)
+	{
+		f->view.min_real = -2.0;
+		f->view.max_real = 2.0;
+	}
+}
+// sets bounds where the fractal actually lives
+// more than 2, renders extra emptiness
+
+void	reset_view(t_fractol *f)
+{
+	set_real_bounds(f);
+	calculate_imag_bounds(f);
+	f->dirty = 1;
 }
