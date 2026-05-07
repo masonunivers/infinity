@@ -6,7 +6,7 @@
 /*   By: jomason <jomason@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/14 13:47:49 by jomason           #+#    #+#             */
-/*   Updated: 2025/07/30 12:58:20 by jomason          ###   ########.fr       */
+/*   Updated: 2026/05/07 20:36:43 by jomason          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,9 @@ void	*ft_calloc(size_t count, size_t size)
 	ft_bzero(ptr, size * count);
 	return (ptr);
 }
+// if (size != 0 && count > SIZE_MAX / size)
+// 	return (NULL);
+// in case of interger overflow bcof(size * count)
 
 // int	main(void)
 // {

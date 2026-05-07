@@ -3,56 +3,77 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: jomason <jomason@student.42.de>            +#+  +:+       +#+         #
+#    By: jomason <jomason@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2026/04/13 18:09:47 by jomason           #+#    #+#              #
-#    Updated: 2026/05/06 10:07:12 by jomason          ###   ########.fr        #
+#    Created: 2026/05/07 10:30:52 by jomason           #+#    #+#              #
+#    Updated: 2026/05/07 20:37:05 by jomason          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME		= fractol
+NAME = fdf
+CC = cc
+CFLAGS = -Wall -Wextra -Werror
 
-CC			= cc
-CFLAGS		= -Wall -Wextra -Werror
+SRC_DIR = src/
+LIBFT_DIR = libft/
+MLX42_DIR = mlx42/
+MLX42_REPO = https://github.com/codam-coding-college/MLX42.git
+INCLUDES = -I $(LIBFT_DIR) -I $(MLX42_DIR)/include/
 
-LIBFT_DIR	= ./libft
-MLX_DIR		= ./mlx
+SRC =	$(SRC_DIR)main.c \
+		$(SRC_DIR)initialization.c \
+		$(SRC_DIR)input_handler.c \
+		$(SRC_DIR)map_allocation.c \
+		$(SRC_DIR)map_parser.c \
+		$(SRC_DIR)mem_management.c \
+		$(SRC_DIR)projection.c \
+		$(SRC_DIR)renderer.c \
+		$(SRC_DIR)utils.c
 
-SRC_DIR		= src
-INLCUDES	= -I. -I$(LIBFT_DIR) -I$(MLX_DIR)
+OBJ = $(SRC:.c=.o)
+LIBFT = $(LIBFT_DIR)libft.a
+MLX42_LIB = $(MLX42_DIR)build/libmlx42.a
 
-SRCS_FILES	=	color.c atod.c check_valid_double.c hooks.c julia.c \
-				main.c mandelbrot.c parse.c ship.c updates.c utils.c
+UNAME_S := $(shell uname -s)
 
-SRCS		= $(addprefix $(SRC_DIR)/, $(SRCS_FILES))
+ifeq ($(UNAME_S),Darwin)
+	LIBS = -lglfw -framework Cocoa -framework OpenGL -framework IOKit
+endif
+ifeq ($(UNAME_S),Linux)
+	LIBS = -lglfw -lGL -ldl -lm -lpthread
+endif
 
-OBJS		= $(SRCS:.c=.o)
+all: clone_mlx42 $(NAME)
 
-LIBS		= -L$(MLX_DIR) -lmlx -L$(LIBFT_DIR) -lft -lXext -lX11 -lm
+$(NAME): $(OBJ) $(LIBFT) $(MLX42_LIB)
+	$(CC) $(CFLAGS) $(OBJ) $(LIBFT) $(MLX42_LIB) -o $(NAME) $(LIBS)
 
-all: $(NAME)
+$(LIBFT):
+	make -C $(LIBFT_DIR)
 
-$(MLX_DIR):
-	git clone https://github.com/42paris/minilibx-linux.git $(MLX_DIR)
-	make -C $(MLX_DIR)
+$(MLX42_LIB):
+	cmake -B $(MLX42_DIR)build -S $(MLX42_DIR)
+	cmake --build $(MLX42_DIR)build
 
-$(NAME): $(OBJS) $(MLX_DIR)
-	@make -C $(LIBFT_DIR)
-	$(CC) $(CFLAGS) $(OBJS) $(LIBS) -o $(NAME)
+clone_mlx42:
+	@if [ ! -d "$(MLX42_DIR).git" ]; then \
+		echo "Cloning MLX42 library..."; \
+		git clone $(MLX42_REPO) $(MLX42_DIR); \
+	else \
+		echo "MLX42 already cloned."; \
+	fi
 
-$(SRC_DIR)/%.o: $(SRC_DIR)/%.c $(MLX_DIR)
-	$(CC) $(CFLAGS) $(INLCUDES) -c $< -o $@
+%.o: %.c
+	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 clean:
-	@make -C $(LIBFT_DIR) clean
-	@if [ -d "$(MLX_DIR)" ]; then make -C $(MLX_DIR) clean 2>/dev/null || true; fi
-	rm -f $(OBJS)
+	make -C $(LIBFT_DIR) clean
+	rm -rf $(OBJ)
 
 fclean: clean
-	@make -C $(LIBFT_DIR) fclean
-	rm -rf $(MLX_DIR)
-	rm -f $(NAME)
+	make -C $(LIBFT_DIR) fclean
+	rm -rf $(NAME) $(MLX42_DIR)
 
 re: fclean all
 
-.PHONY: all clean fclean re
+.PHONY: all bonus clean fclean re clone_mlx42
